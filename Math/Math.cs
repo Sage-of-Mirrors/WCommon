@@ -216,5 +216,24 @@ namespace WindEditor
         {
             return (int)Math.Floor(val);
         }
-    }
+
+		private static Matrix4 OrthoX = Matrix4.CreateRotationX(WMath.DegreesToRadians(90));
+		private static Matrix4 OrthoY = Matrix4.CreateRotationY(WMath.DegreesToRadians(90));
+
+		public static void FindOrthoNormals(Vector3 normal, out Vector3 orthoNormal1, out Vector3 orthoNormal2)
+		{
+			Vector3 w = Vector3.Transform(normal, OrthoX);
+			float dot = Vector3.Dot(normal, w);
+			if (Math.Abs(dot) > 0.6)
+			{
+				w = Vector3.Transform(normal, OrthoY);
+			}
+			w.Normalize();
+
+			orthoNormal1 = Vector3.Cross(normal, w);
+			orthoNormal1.Normalize();
+			orthoNormal2 = Vector3.Cross(normal, orthoNormal1);
+			orthoNormal2.Normalize();
+		}
+	}
 }

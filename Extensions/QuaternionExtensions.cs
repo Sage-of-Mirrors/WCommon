@@ -55,5 +55,23 @@ namespace WindEditor
         {
             return (float)Math.Atan2(2 * (q.W * q.Z + q.X * q.Y), 1 - (2 * (Math.Pow(q.Y, 2) + Math.Pow(q.Z, 2))));
         }
+
+		public static float FindQuaternionTwist(this Quaternion quat, Vector3 axis)
+		{
+			axis.Normalize();
+
+			// Get the plane the axis is a normal of
+			Vector3 orthoNormal1, orthoNormal2;
+			WMath.FindOrthoNormals(axis, out orthoNormal1, out orthoNormal2);
+			Vector3 transformed = Vector3.Transform(orthoNormal1, quat);
+
+			// Project transformed vector onto a plane
+			Vector3 flattened = transformed - (Vector3.Dot(transformed, axis) * axis);
+			flattened.Normalize();
+
+			// Get the angle between the original vector and projected transform to get angle around normal
+			float a = (float)Math.Acos((double)Vector3.Dot(orthoNormal1, flattened));
+			return WMath.RadiansToDegrees(a);
+		}
     }
 }
