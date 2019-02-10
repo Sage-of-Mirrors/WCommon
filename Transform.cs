@@ -30,7 +30,7 @@ namespace WindEditor
         }
 
         /// <summary> Position of the object in global space. </summary>
-        public Vector3 Position
+        public BindingVector3 Position
         {
             get
             {

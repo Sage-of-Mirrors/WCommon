@@ -69,6 +69,7 @@
     <Compile Include="Framework\Shader.cs" />
     <Compile Include="LinearColor.cs" />
     <Compile Include="Math\AABox.cs" />
+    <Compile Include="Math\BindingVector3.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Math\Math.cs" />
     <Compile Include="Math\Plane.cs" />
