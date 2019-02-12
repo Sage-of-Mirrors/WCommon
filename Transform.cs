@@ -2,11 +2,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace WindEditor
 {
-    public class WTransform
+    public class WTransform : INotifyPropertyChanged
     {
+        // WPF
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary> The parent of this transform that this transform moves locally to. null if a root object. </summary>
         public WTransform Parent
         {
@@ -63,6 +67,8 @@ namespace WindEditor
                 }
 
                 m_localPosition = transformedPoint;
+
+                OnPropertyChanged("Position");
             }
         }
 
@@ -215,6 +221,12 @@ namespace WindEditor
         public override string ToString()
         {
             return string.Format("Transform (Position: {0} Rotation: {1} LocalScale: {2})", Position, Rotation, LocalScale);
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
