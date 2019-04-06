@@ -72,6 +72,54 @@ namespace WindEditor
 
         /// <summary>
         /// Calculate the number of bytes required to pad the specified
+        /// number up to the next 4 byte alignment.
+        /// </summary>
+        /// <param name="inPos">Position in memory stream that you're currently at.</param>
+        /// <returns>The delta required to get to the next 4 byte alignment.</returns>
+        public static int Pad4Delta(long inPos)
+        {
+            // Pad up to a 32 byte alignment
+            // Formula: (x + (n-1)) & ~(n-1)
+            long nextAligned = (inPos + 0x3) & ~0x3;
+
+            long delta = nextAligned - inPos;
+            return (int)delta;
+        }
+
+        /// <summary>
+        /// Calculate the number of bytes required to pad the specified
+        /// number up to the next 8 byte alignment.
+        /// </summary>
+        /// <param name="inPos">Position in memory stream that you're currently at.</param>
+        /// <returns>The delta required to get to the next 8 byte alignment.</returns>
+        public static int Pad8Delta(long inPos)
+        {
+            // Pad up to a 32 byte alignment
+            // Formula: (x + (n-1)) & ~(n-1)
+            long nextAligned = (inPos + 0x7) & ~0x7;
+
+            long delta = nextAligned - inPos;
+            return (int)delta;
+        }
+
+        /// <summary>
+        /// Calculate the number of bytes required to pad the specified
+        /// number up to the next 16 byte alignment.
+        /// </summary>
+        /// <param name="inPos">Position in memory stream that you're currently at.</param>
+        /// <returns>The delta required to get to the next 16 byte alignment.</returns>
+        public static int Pad16Delta(long inPos)
+        {
+            // Pad up to a 32 byte alignment
+            // Formula: (x + (n-1)) & ~(n-1)
+            long nextAligned = (inPos + 0xF) & ~0xF;
+
+            long delta = nextAligned - inPos;
+            return (int)delta;
+        }
+
+        /// <summary>
+        /// Calculate the number of bytes required to pad the specified
         /// number up to the next 32 byte alignment.
         /// </summary>
         /// <param name="inPos">Position in memory stream that you're currently at.</param>
