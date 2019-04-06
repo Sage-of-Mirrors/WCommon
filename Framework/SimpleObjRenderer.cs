@@ -17,6 +17,8 @@ namespace WindEditor
         }
 
         public bool Highlighted;
+        public bool BlendingEnabled;
+        public Vector4 TintColor;
 
         private int m_vertexVBO;
         private int m_indexVBO;
@@ -34,7 +36,7 @@ namespace WindEditor
         private bool m_hasBeenDisposed = false;
 
 
-        public SimpleObjRenderer(Obj file)
+        public SimpleObjRenderer(Obj file, Vector4 tint_color, bool enable_blending = false)
         {
             m_vertexVBO = GL.GenBuffer();
             m_indexVBO = GL.GenBuffer();
@@ -51,6 +53,9 @@ namespace WindEditor
             m_highlightedShader.CompileSource(File.ReadAllText("resources/shaders/UnlitTexture.vert"), ShaderType.VertexShader);
             m_highlightedShader.CompileSource(File.ReadAllText("resources/shaders/TransformGizmoHighlight.frag"), ShaderType.FragmentShader);
             m_highlightedShader.LinkShader();
+
+            BlendingEnabled = enable_blending;
+            TintColor = tint_color;
 
             // Generate an array of all vertices instead of the compact form OBJ comes as.
             Vector3[] positions = null;
@@ -156,8 +161,19 @@ namespace WindEditor
             GL.CullFace(CullFaceMode.Front);
             GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
-            GL.Disable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            if (BlendingEnabled)
+            {
+                // Enable transparency
+                GL.Enable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            }
+            else
+            {
+                GL.Disable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            }
+
             GL.DepthMask(true);
 
             Shader curShader = Highlighted ? m_highlightedShader : m_unhighlightedShader;
@@ -166,6 +182,9 @@ namespace WindEditor
             GL.UniformMatrix4(curShader.UniformModelMtx, false, ref modelMatrix);
             GL.UniformMatrix4(curShader.UniformViewMtx, false, ref viewMatrix);
             GL.UniformMatrix4(curShader.UniformProjMtx, false, ref projMatrix);
+
+            if (curShader.UniformColor0Mat != -1)
+                GL.Uniform4(curShader.UniformColor0Mat, ref TintColor);
 
             // Position
             GL.BindBuffer(BufferTarget.ArrayBuffer, m_vertexVBO);
