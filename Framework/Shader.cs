@@ -35,6 +35,7 @@ namespace JStudio.OpenGL
         public int UniformViewMtx { get; private set; }
         public int UniformProjMtx { get; private set; }
         public int UniformTexMtx { get; private set; }
+        public int UniformPosMtx { get; private set; }
         public int UniformPostTexMtx { get; private set; }
         public int UniformColor0Amb { get; private set; }
         public int UniformColor0Mat { get; private set; }
@@ -152,6 +153,7 @@ namespace JStudio.OpenGL
             UniformModelMtx = GL.GetUniformLocation(m_programAddress, "ModelMtx");
             UniformViewMtx = GL.GetUniformLocation(m_programAddress, "ViewMtx");
             UniformProjMtx = GL.GetUniformLocation(m_programAddress, "ProjMtx");
+            UniformPosMtx = GL.GetUniformLocation(m_programAddress, "SkinningMtxs");
 
             UniformTexMtx = GL.GetUniformLocation(m_programAddress, "TexMtx");
             UniformPostTexMtx = GL.GetUniformLocation(m_programAddress, "PostMtx");
