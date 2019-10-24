@@ -33,8 +33,11 @@ namespace WindEditor
             }
         }
 
+        public BindingVector3 PositionBase { get; set; }
+        public BindingVector3 ScaleBase { get; set; }
+
         /// <summary> Position of the object in global space. </summary>
-        public BindingVector3 Position
+        public Vector3 Position
         {
             get
             {
@@ -66,7 +69,7 @@ namespace WindEditor
                     curParent = curParent.m_parent;
                 }
 
-                m_localPosition = transformedPoint;
+                LocalPosition = transformedPoint;
 
                 OnPropertyChanged("Position");
             }
@@ -109,20 +112,22 @@ namespace WindEditor
         /// <summary> Local scale of the object. Global scale is not supported. </summary>
         public Vector3 LocalScale
         {
-            get { return m_localScale; }
+            get { return ScaleBase.BackingVector; }
             set
             {
-                m_localScale = value;
+                ScaleBase.BackingVector = value;
+                OnPropertyChanged("ScaleBase");
             }
         }
 
         /// <summary> Local position relative to the parent. Equivelent to Position if parent is null. </summary>
         public Vector3 LocalPosition
         {
-            get { return m_localPosition; }
+            get { return PositionBase.BackingVector; }
             set
             {
-                m_localPosition = value;
+                PositionBase.BackingVector = value;
+                OnPropertyChanged("PositionBase");
             }
         }
 
@@ -182,6 +187,8 @@ namespace WindEditor
 
         public WTransform()
         {
+            PositionBase = new BindingVector3();
+            ScaleBase = new BindingVector3();
             LocalPosition = Vector3.Zero;
             LocalRotation = Quaternion.Identity;
             LocalScale = Vector3.One;

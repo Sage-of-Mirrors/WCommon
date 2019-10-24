@@ -10,6 +10,8 @@ namespace WindEditor
 {
     public class BindingVector3 : INotifyPropertyChanged
     {
+        private Vector3 m_BackingVector;
+
         // WPF
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -57,43 +59,32 @@ namespace WindEditor
             get { return m_BackingVector; }
             set
             {
-                if (value != m_BackingVector)
+                if (value.X != m_BackingVector.X)
                 {
-                    m_BackingVector = value;
-                    OnPropertyChanged("BackingVector");
+                    m_BackingVector.X = value.X;
+                    OnPropertyChanged("X");
+                }
+                if (value.Y != m_BackingVector.Y)
+                {
+                    m_BackingVector.Y = value.Y;
+                    OnPropertyChanged("Y");
+                }
+                if (value.Z != m_BackingVector.Z)
+                {
+                    m_BackingVector.Z = value.Z;
+                    OnPropertyChanged("Z");
                 }
             }
         }
 
-        private Vector3 m_BackingVector;
-        private int rand;
-
         public BindingVector3()
         {
             m_BackingVector = new Vector3();
-
-            Random et = new Random();
-
-            rand = et.Next();
         }
 
         public BindingVector3(Vector3 v)
         {
             m_BackingVector = v;
-
-            Random et = new Random();
-
-            rand = et.Next();
-        }
-
-        public static implicit operator BindingVector3(Vector3 v)
-        {
-            return new BindingVector3(v);
-        }
-
-        public static implicit operator Vector3(BindingVector3 b)
-        {
-            return b.m_BackingVector;
         }
 
         protected void OnPropertyChanged(string propertyName)
