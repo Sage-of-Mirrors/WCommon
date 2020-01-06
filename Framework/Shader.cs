@@ -5,21 +5,20 @@ namespace JStudio.OpenGL
 {
     public enum ShaderAttributeIds
     {
-        None = 0,
-        Position = 1,
-        Normal = 2,
-        Binormal = 3,
-        Color0 = 4,
-        Color1 = 5,
-        Tex0 = 6,
-        Tex1 = 7,
-        Tex2 = 8,
-        Tex3 = 9,
-        Tex4 = 10,
-        Tex5 = 11,
-        Tex6 = 12,
-        Tex7 = 13,
-        PosMtxIndex = 14,
+        Position = 0,
+        Normal = 1,
+        Color0 = 2,
+        Color1 = 3,
+        Tex0 = 4,
+        Tex1 = 5,
+        Tex2 = 6,
+        Tex3 = 7,
+        Tex4 = 8,
+        Tex5 = 9,
+        Tex6 = 10,
+        Tex7 = 11,
+        SkinIndices = 12,
+        SkinWeights = 13
     }
 
     public enum ShaderUniformBlockIds
@@ -31,16 +30,7 @@ namespace JStudio.OpenGL
     public class Shader : IDisposable
     {
         public readonly string Name;
-        public int UniformModelMtx { get; private set; }
-        public int UniformViewMtx { get; private set; }
-        public int UniformProjMtx { get; private set; }
-        public int UniformTexMtx { get; private set; }
-        public int UniformPosMtx { get; private set; }
-        public int UniformPostTexMtx { get; private set; }
-        public int UniformColor0Amb { get; private set; }
-        public int UniformColor0Mat { get; private set; }
-        public int UniformColor1Amb { get; private set; }
-        public int UniformColor1Mat { get; private set; }
+
         public int UniformLightBlock { get; private set; }
         public int UniformPSBlock { get; private set; }
         public int[] UniformTextureSamplers { get; private set; }
@@ -137,7 +127,8 @@ namespace JStudio.OpenGL
             GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex5, "RawTex5");
             GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex6, "RawTex6");
             GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex7, "RawTex7");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.PosMtxIndex, "RawPosMtxIndex");
+            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.SkinIndices, "SkinIndices");
+            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.SkinWeights, "SkinWeights");
 
             GL.LinkProgram(m_programAddress);
 
@@ -150,17 +141,6 @@ namespace JStudio.OpenGL
             }
 
             // Now that the program is linked, bind to our uniform locations.
-            UniformModelMtx = GL.GetUniformLocation(m_programAddress, "ModelMtx");
-            UniformViewMtx = GL.GetUniformLocation(m_programAddress, "ViewMtx");
-            UniformProjMtx = GL.GetUniformLocation(m_programAddress, "ProjMtx");
-            UniformPosMtx = GL.GetUniformLocation(m_programAddress, "SkinningMtxs");
-
-            UniformTexMtx = GL.GetUniformLocation(m_programAddress, "TexMtx");
-            UniformPostTexMtx = GL.GetUniformLocation(m_programAddress, "PostMtx");
-            UniformColor0Amb = GL.GetUniformLocation(m_programAddress, "COLOR0_Amb");
-            UniformColor0Mat = GL.GetUniformLocation(m_programAddress, "COLOR0_Mat");
-            UniformColor1Amb = GL.GetUniformLocation(m_programAddress, "COLOR1_Amb");
-            UniformColor1Mat = GL.GetUniformLocation(m_programAddress, "COLOR1_Mat");
             UniformLightBlock = GL.GetUniformBlockIndex(m_programAddress, "LightBlock");
             UniformPSBlock = GL.GetUniformBlockIndex(m_programAddress, "PSBlock");
 

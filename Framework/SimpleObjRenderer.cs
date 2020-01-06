@@ -157,7 +157,7 @@ namespace WindEditor
 
         public void Render(Matrix4 viewMatrix, Matrix4 projMatrix, Matrix4 modelMatrix)
         {
-            GL.FrontFace(FrontFaceDirection.Cw);
+            /*GL.FrontFace(FrontFaceDirection.Cw);
             GL.CullFace(CullFaceMode.Front);
             GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.DepthTest);
@@ -227,7 +227,7 @@ namespace WindEditor
             GL.DisableVertexAttribArray((int)ShaderAttributeIds.Position);
             GL.DisableVertexAttribArray((int)ShaderAttributeIds.Tex0);
             GL.DisableVertexAttribArray((int)ShaderAttributeIds.Normal);
-            GL.BindTexture(TextureTarget.Texture2D, -1);
+            GL.BindTexture(TextureTarget.Texture2D, -1);*/
         }
 
         #region IDisposable Support
