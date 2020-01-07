@@ -99,41 +99,29 @@ namespace JStudio.OpenGL
 
         public bool LinkShader()
         {
+            // If the program was previously linked, we need to dispose of the old
+            // program. We're going to create a new one.
             if (m_programAddress >= 0)
             {
                 Console.WriteLine("Shader \"{0}\" called LinkShader for already linked shader! Disposing old program.", Name);
                 GL.DeleteProgram(m_programAddress);
             }
 
+            // Error out if a shader step is missing.
             if (m_fragmentAddress < 0 || m_vertexAddress < 0)
+            {
                 throw new Exception("Shader does not have both a Vertex and Fragment shader!");
+            }
 
-            // Initialize a program and link the already compiled shaders
             m_programAddress = GL.CreateProgram();
+
             GL.AttachShader(m_programAddress, m_vertexAddress);
             GL.AttachShader(m_programAddress, m_fragmentAddress);
 
-            // Bind our Attribute locations before we link the program.
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Position, "RawPosition");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Normal, "RawNormal");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Binormal, "RawBinormal");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Color0, "RawColor0");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Color1, "RawColor1");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex0, "RawTex0");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex1, "RawTex1");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex2, "RawTex2");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex3, "RawTex3");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex4, "RawTex4");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex5, "RawTex5");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex6, "RawTex6");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.Tex7, "RawTex7");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.SkinIndices, "SkinIndices");
-            GL.BindAttribLocation(m_programAddress, (int)ShaderAttributeIds.SkinWeights, "SkinWeights");
-
             GL.LinkProgram(m_programAddress);
 
-            int linkStatus;
-            GL.GetProgram(m_programAddress, GetProgramParameterName.LinkStatus, out linkStatus);
+            // Make sure the program linked correctly.
+            GL.GetProgram(m_programAddress, GetProgramParameterName.LinkStatus, out int linkStatus);
             if (linkStatus != 1)
             {
                 Console.WriteLine("Error linking shader. Result: {0}", GL.GetProgramInfoLog(m_programAddress));
@@ -144,6 +132,7 @@ namespace JStudio.OpenGL
             UniformLightBlock = GL.GetUniformBlockIndex(m_programAddress, "LightBlock");
             UniformPSBlock = GL.GetUniformBlockIndex(m_programAddress, "PSBlock");
 
+            // Initialize the texture samplers.
             UniformTextureSamplers = new int[8];
             for (int i = 0; i < UniformTextureSamplers.Length; i++)
                 UniformTextureSamplers[i] = GL.GetUniformLocation(m_programAddress, string.Format("Texture[{0}]", i));
